@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Meta Ads 2025 - Grupo 1001 Noites</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #f8fafc;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+        
+        /* Cards de resumo */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+        }
+        
+        .card.highlight-best {
+            border-color: #22c55e;
+            background: linear-gradient(135deg, #14532d 0%, #1e293b 100%);
+        }
+        
+        .card.highlight-worst {
+            border-color: #ef4444;
+            background: linear-gradient(135deg, #450a0a 0%, #1e293b 100%);
+        }
+        
+        .card-label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin: 5px 0;
+        }
+        
+        .card-sub {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        
+        /* Seções */
+        .section {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #334155;
+        }
+        
+        .section h2 {
+            color: #f8fafc;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 10px;
+        }
+        
+        /* Grid de gráficos */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+        
+        .chart-container {
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 15px;
+            height: 300px;
+        }
+        
+        /* Tabela */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        
+        th, td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+        
+        th {
+            background: #0f172a;
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+        
+        tr:hover {
+            background: #334155;
+        }
+        
+        .text-right {
+            text-align: right;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .badge-best {
+            background: #166534;
+            color: #bbf7d0;
+        }
+        
+        .badge-worst {
+            background: #7f1d1d;
+            color: #fecaca;
+        }
+        
+        .badge-account {
+            background: #1e40af;
+            color: #bfdbfe;
+        }
+        
+        /* Análise */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .analysis-box {
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .analysis-box h3 {
+            color: #f8fafc;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        
+        .analysis-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .analysis-box li {
+            padding: 8px 0;
+            border-bottom: 1px solid #334155;
+            font-size: 0.9rem;
+        }
+        
+        .analysis-box li:last-child {
+            border-bottom: none;
+        }
+        
+        .positive {
+            color: #4ade80;
+        }
+        
+        .negative {
+            color: #f87171;
+        }
+        
+        .warning {
+            color: #fbbf24;
+        }
+        
+        /* Ranking */
+        .ranking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: #0f172a;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid;
+        }
+        
+        .ranking-item.top {
+            border-left-color: #22c55e;
+        }
+        
+        .ranking-item.bottom {
+            border-left-color: #ef4444;
+        }
+        
+        .ranking-position {
+            font-size: 1.2rem;
+            font-weight: 700;
+            width: 30px;
+            color: #64748b;
+        }
+        
+        .ranking-name {
+            flex: 1;
+            margin-left: 15px;
+        }
+        
+        .ranking-metrics {
+            text-align: right;
+            font-size: 0.85rem;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.8rem;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Relatório Anual Meta Ads 2025</h1>
+        <p class="subtitle">Grupo 1001 Noites • Hotel 1001 Prime + CA02 LVM • Janeiro - Dezembro 2025</p>
+        
+        <!-- CARDS DE RESUMO -->
+        <div class="summary-cards">
+            <div class="card">
+                <div class="card-label">Investimento Total</div>
+                <div class="card-value">R$ 47.393,65</div>
+                <div class="card-sub">2 contas ativas</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Impressões</div>
+                <div class="card-value">4,92M</div>
+                <div class="card-sub">4.925.238 impressões</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Cliques</div>
+                <div class="card-value">95.261</div>
+                <div class="card-sub">CTR médio: 1,93%</div>
+            </div>
+            <div class="card">
+                <div class="card-label">CPC Médio</div>
+                <div class="card-value">R$ 0,50</div>
+                <div class="card-sub">Custo por clique</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Leads (Contato)</div>
+                <div class="card-value">9</div>
+                <div class="card-sub">Custo/lead: R$ 5.265</div>
+            </div>
+            <div class="card highlight-best">
+                <div class="card-label">🏆 Melhor Mês</div>
+                <div class="card-value">Julho</div>
+                <div class="card-sub">Hotel Prime: R$ 3.164 • 6.460 cliques</div>
+            </div>
+        </div>
+        
+        <!-- GRÁFICOS MENSAIS -->
+        <div class="section">
+            <h2>📈 Evolução Mensal</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <canvas id="spendChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="clicksChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="ctrChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="cpcChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TABELA MENSAL -->
+        <div class="section">
+            <h2>📋 Dados Mensais Detalhados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Conta</th>
+                        <th>Mês</th>
+                        <th class="text-right">Gasto</th>
+                        <th class="text-right">Impressões</th>
+                        <th class="text-right">Cliques</th>
+                        <th class="text-right">CPC</th>
+                        <th class="text-right">CTR</th>
+                    </tr>
+                </thead>
+                <tbody id="monthlyTable">
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- MELHORES E PIORES -->
+        <div class="section">
+            <h2>🎯 Análise de Performance</h2>
+            <div class="analysis-grid">
+                <div class="analysis-box">
+                    <h3 class="positive">✅ MELHORES Resultados</h3>
+                    <ul>
+                        <li><strong>Melhor CTR:</strong> Junho (Hotel Prime) - <span class="positive">2,89%</span></li>
+                        <li><strong>Mais cliques:</strong> Julho (Hotel Prime) - <span class="positive">6.460 cliques</span></li>
+                        <li><strong>Menor CPC:</strong> Janeiro (Hotel Prime) - <span class="positive">R$ 0,28</span></li>
+                        <li><strong>Melhor CTR LVM:</strong> Abril - <span class="positive">2,70%</span></li>
+                        <li><strong>Mês mais eficiente:</strong> Julho - maior volume com CTR acima de 2,8%</li>
+                    </ul>
+                </div>
+                <div class="analysis-box">
+                    <h3 class="negative">❌ PONTOS DE ATENÇÃO</h3>
+                    <ul>
+                        <li><strong>Pior CTR:</strong> Janeiro (LVM) - <span class="negative">0,91%</span></li>
+                        <li><strong>Maior CPC:</strong> Outubro (LVM) - <span class="negative">R$ 0,94</span></li>
+                        <li><strong>Menos cliques:</strong> Janeiro (LVM) - 3.399 cliques (apesar de 374K impressões)</li>
+                        <li><strong>Custo por lead:</strong> <span class="negative">R$ 5.265</span> - extremamente alto</li>
+                        <li><strong>Leads totais:</strong> Apenas 9 no ano inteiro</li>
+                    </ul>
+                </div>
+                <div class="analysis-box">
+                    <h3 class="warning">⚠️ Problemas Identificados</h3>
+                    <ul>
+                        <li><strong>Rastreamento deficiente:</strong> Não há ROAS ou receita atribuída</li>
+                        <li><strong>Conversões subnotificadas:</strong> Apenas 9 contatos registrados</li>
+                        <li><strong>Pixel provavelmente mal configurado</strong></li>
+                        <li><strong>CA01 (DF):</strong> Zero investimento em 2025</li>
+                        <li><strong>Campanhas pausadas:</strong> Todas paradas no fim do ano</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- RANKING CAMPANHAS -->
+        <div class="section">
+            <h2>🏆 Ranking de Campanhas 2025</h2>
+            
+            <h3 style="color: #4ade80; margin: 20px 0 15px;">Top 5 Campanhas (por CTR)</h3>
+            <div id="topCampaigns"></div>
+            
+            <h3 style="color: #f87171; margin: 30px 0 15px;">Piores 5 Campanhas (por CTR)</h3>
+            <div id="bottomCampaigns"></div>
+        </div>
+        
+        <!-- TABELA CAMPANHAS COMPLETA -->
+        <div class="section">
+            <h2>📊 Todas as Campanhas 2025</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Campanha</th>
+                        <th>Conta</th>
+                        <th class="text-right">Gasto</th>
+                        <th class="text-right">Impressões</th>
+                        <th class="text-right">Cliques</th>
+                        <th class="text-right">CPC</th>
+                        <th class="text-right">CTR</th>
+                    </tr>
+                </thead>
+                <tbody id="campaignsTable">
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- RECOMENDAÇÕES -->
+        <div class="section">
+            <h2>💡 Recomendações para 2026</h2>
+            <div class="analysis-grid">
+                <div class="analysis-box">
+                    <h3>🔧 Correções Urgentes</h3>
+                    <ul>
+                        <li><strong>1. Configurar Pixel corretamente</strong> - Sem isso, não há como medir conversões reais</li>
+                        <li><strong>2. Implementar API de Conversões</strong> - Para rastreamento pós-iOS14</li>
+                        <li><strong>3. Configurar eventos:</strong> PageView, ViewContent, Contact, Purchase</li>
+                        <li><strong>4. Ativar CA01 (DF)</strong> - Conta parada o ano todo</li>
+                    </ul>
+                </div>
+                <div class="analysis-box">
+                    <h3>📈 Estratégia de Mídia</h3>
+                    <ul>
+                        <li><strong>Replicar julho:</strong> Melhor custo-benefício do ano</li>
+                        <li><strong>Evitar dezembro:</strong> Menor performance</li>
+                        <li><strong>Focar em engajamento:</strong> Campanhas de eng. tiveram melhor CTR</li>
+                        <li><strong>Testar períodos sazonais:</strong> Namorados, Páscoa tiveram bom volume</li>
+                    </ul>
+                </div>
+                <div class="analysis-box">
+                    <h3>💰 Otimização de Custo</h3>
+                    <ul>
+                        <li><strong>CPC alvo:</strong> Manter abaixo de R$ 0,50</li>
+                        <li><strong>CTR alvo:</strong> Buscar acima de 2%</li>
+                        <li><strong>Custo/lead alvo:</strong> Abaixo de R$ 50 (atual: R$ 5.265)</li>
+                        <li><strong>Orçamento sugerido:</strong> R$ 4.000-5.000/mês por conta</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- RESUMO EXECUTIVO -->
+        <div class="section">
+            <h2>📄 Resumo Executivo</h2>
+            <div class="analysis-box" style="background: linear-gradient(135deg, #1e3a5f 0%, #1e293b 100%);">
+                <p style="margin-bottom: 15px;">
+                    Em 2025, o <strong>Grupo 1001 Noites</strong> investiu <strong>R$ 47.393,65</strong> em Meta Ads através de duas contas 
+                    (Hotel 1001 Prime e CA02 LVM), gerando <strong>95.261 cliques</strong> e <strong>4,9M impressões</strong>.
+                </p>
+                <p style="margin-bottom: 15px;">
+                    <strong class="positive">Pontos positivos:</strong> CTR médio de 1,93% dentro do esperado para o setor hoteleiro. 
+                    Julho destacou-se como o melhor mês em eficiência. Campanhas de engajamento performaram melhor que tráfego.
+                </p>
+                <p style="margin-bottom: 15px;">
+                    <strong class="negative">Pontos críticos:</strong> O rastreamento de conversões está falhando gravemente - 
+                    apenas 9 leads registrados no ano inteiro representa um custo por lead de R$ 5.265, valor inviável. 
+                    O Pixel provavelmente não está configurado corretamente.
+                </p>
+                <p>
+                    <strong class="warning">Recomendação principal:</strong> Antes de aumentar investimento, é imprescindível 
+                    corrigir o rastreamento de conversões. Sem isso, qualquer otimização será baseada em métricas de vaidade 
+                    (impressões, cliques) e não em resultados reais de negócio.
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Relatório gerado automaticamente • Dados extraídos da Meta Ads API • 14/02/2026
+        </div>
+    </div>
+    
+    <script>
+        // Dados mensais
+        const monthlyData = {
+            prime: {
+                name: 'Hotel 1001 Prime',
+                months: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                spend: [1391.71, 1408.44, 1913.30, 1428.05, 3252.81, 2891.39, 3163.84, 1520.06, 2897.93, 1856.16, 1504.10, 1164.55],
+                impressions: [190564, 194213, 341360, 143575, 266780, 240063, 223308, 115181, 257690, 180673, 143496, 107952],
+                clicks: [4901, 4090, 6035, 2993, 5229, 6437, 6460, 2307, 5160, 4044, 4160, 3265],
+                cpc: [0.28, 0.34, 0.32, 0.48, 0.62, 0.45, 0.49, 0.66, 0.56, 0.46, 0.36, 0.36],
+                ctr: [2.57, 2.11, 1.77, 2.08, 1.96, 2.68, 2.89, 2.00, 2.00, 2.24, 2.90, 3.02]
+            },
+            lvm: {
+                name: 'CA02 LVM',
+                months: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                spend: [1087.88, 2000.54, 2187.44, 1292.50, 2027.92, 1816.40, 1849.86, 2321.11, 3016.38, 2623.94, 1596.96, 1180.38],
+                impressions: [374511, 241587, 177122, 107771, 223776, 183478, 195184, 241633, 306090, 178665, 151231, 139335],
+                clicks: [3399, 3123, 2963, 2908, 4338, 3597, 3678, 4279, 4958, 2796, 2280, 1861],
+                cpc: [0.32, 0.64, 0.74, 0.44, 0.47, 0.50, 0.50, 0.54, 0.61, 0.94, 0.70, 0.63],
+                ctr: [0.91, 1.29, 1.67, 2.70, 1.94, 1.96, 1.88, 1.77, 1.62, 1.56, 1.51, 1.34]
+            }
+        };
+        
+        // Dados das campanhas
+        const campaigns = [
+            { name: 'NAMORADOS - CBO', account: 'Hotel Prime', spend: 2117.98, impressions: 93932, clicks: 5091, cpc: 0.42, ctr: 5.42 },
+            { name: 'Prime"s - Engajamento - Frio', account: 'Hotel Prime', spend: 1795.62, impressions: 187997, clicks: 5476, cpc: 0.33, ctr: 2.91 },
+            { name: '04 - [Tráfego] - Advantage', account: 'Hotel Prime', spend: 757.04, impressions: 72386, clicks: 2455, cpc: 0.31, ctr: 3.39 },
+            { name: '02 - [Eng.] - Advantage', account: 'Hotel Prime', spend: 751.14, impressions: 66876, clicks: 2093, cpc: 0.36, ctr: 3.13 },
+            { name: 'PASCOA', account: 'CA02 LVM', spend: 750.28, impressions: 49367, clicks: 1547, cpc: 0.48, ctr: 3.13 },
+            { name: 'Eternal-20$-Quente', account: 'CA02 LVM', spend: 1063.62, impressions: 136502, clicks: 3640, cpc: 0.29, ctr: 2.67 },
+            { name: '03 - [Tráfego] - Casados', account: 'Hotel Prime', spend: 757.56, impressions: 74090, clicks: 1969, cpc: 0.38, ctr: 2.66 },
+            { name: 'SUPER FRIO - ENG', account: 'Hotel Prime', spend: 7260.17, impressions: 723548, clicks: 16230, cpc: 0.45, ctr: 2.24 },
+            { name: 'CEI-FRIO-20', account: 'Hotel Prime', spend: 945.49, impressions: 148091, clicks: 3233, cpc: 0.29, ctr: 2.18 },
+            { name: '04 - [Tráfego] - Advantage', account: 'CA02 LVM', spend: 864.21, impressions: 86719, clicks: 1245, cpc: 0.69, ctr: 1.44 },
+            { name: 'ETERNAL - QUENTE', account: 'CA02 LVM', spend: 5538.57, impressions: 536033, clicks: 10076, cpc: 0.55, ctr: 1.88 },
+            { name: 'ETERNAL - SUPERFRIO', account: 'CA02 LVM', spend: 8108.18, impressions: 786964, clicks: 13632, cpc: 0.59, ctr: 1.73 },
+            { name: '02 - [Eng.] - Advantage', account: 'CA02 LVM', spend: 685.70, impressions: 68701, clicks: 1177, cpc: 0.58, ctr: 1.71 },
+            { name: 'Quente ETERNAL - $50', account: 'Hotel Prime', spend: 6300.21, impressions: 552013, clicks: 11072, cpc: 0.57, ctr: 2.01 },
+            { name: '01 - [Eng.] - Casados', account: 'CA02 LVM', spend: 936.98, impressions: 105401, clicks: 1279, cpc: 0.73, ctr: 1.21 },
+            { name: 'Rec - eng Publi', account: 'Hotel Prime', spend: 709.18, impressions: 235436, clicks: 2973, cpc: 0.24, ctr: 1.26 },
+            { name: 'PÁSCOA', account: 'Hotel Prime', spend: 500.85, impressions: 54437, clicks: 857, cpc: 0.58, ctr: 1.57 },
+            { name: '4 é par', account: 'Hotel Prime', spend: 229.73, impressions: 20123, clicks: 344, cpc: 0.67, ctr: 1.71 },
+            { name: 'Jantar', account: 'Hotel Prime', spend: 724.52, impressions: 47156, clicks: 719, cpc: 1.01, ctr: 1.52 },
+            { name: 'Jantar Quente', account: 'Hotel Prime', spend: 610.89, impressions: 40011, clicks: 447, cpc: 1.37, ctr: 1.12 },
+            { name: '03 - [Tráfego] - Casados', account: 'CA02 LVM', spend: 51.36, impressions: 4306, clicks: 45, cpc: 1.14, ctr: 1.05 },
+            { name: 'eng - Org', account: 'CA02 LVM', spend: 230.62, impressions: 64439, clicks: 475, cpc: 0.49, ctr: 0.74 },
+            { name: 'FÉRIAS-REC-20', account: 'CA02 LVM', spend: 215.63, impressions: 264937, clicks: 311, cpc: 0.69, ctr: 0.12 }
+        ];
+        
+        // Configuração dos gráficos
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.borderColor = '#334155';
+        
+        // Gráfico de Gastos
+        new Chart(document.getElementById('spendChart'), {
+            type: 'line',
+            data: {
+                labels: monthlyData.prime.months,
+                datasets: [{
+                    label: 'Hotel Prime',
+                    data: monthlyData.prime.spend,
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'CA02 LVM',
+                    data: monthlyData.lvm.spend,
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: { display: true, text: 'Gasto Mensal (R$)', color: '#f8fafc' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+        
+        // Gráfico de Cliques
+        new Chart(document.getElementById('clicksChart'), {
+            type: 'bar',
+            data: {
+                labels: monthlyData.prime.months,
+                datasets: [{
+                    label: 'Hotel Prime',
+                    data: monthlyData.prime.clicks,
+                    backgroundColor: '#3b82f6'
+                }, {
+                    label: 'CA02 LVM',
+                    data: monthlyData.lvm.clicks,
+                    backgroundColor: '#10b981'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: { display: true, text: 'Cliques por Mês', color: '#f8fafc' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+        
+        // Gráfico de CTR
+        new Chart(document.getElementById('ctrChart'), {
+            type: 'line',
+            data: {
+                labels: monthlyData.prime.months,
+                datasets: [{
+                    label: 'Hotel Prime',
+                    data: monthlyData.prime.ctr,
+                    borderColor: '#3b82f6',
+                    tension: 0.4
+                }, {
+                    label: 'CA02 LVM',
+                    data: monthlyData.lvm.ctr,
+                    borderColor: '#10b981',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: { display: true, text: 'CTR (%)', color: '#f8fafc' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+        
+        // Gráfico de CPC
+        new Chart(document.getElementById('cpcChart'), {
+            type: 'line',
+            data: {
+                labels: monthlyData.prime.months,
+                datasets: [{
+                    label: 'Hotel Prime',
+                    data: monthlyData.prime.cpc,
+                    borderColor: '#3b82f6',
+                    tension: 0.4
+                }, {
+                    label: 'CA02 LVM',
+                    data: monthlyData.lvm.cpc,
+                    borderColor: '#10b981',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: { display: true, text: 'CPC Médio (R$)', color: '#f8fafc' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+        
+        // Preencher tabela mensal
+        const monthlyTable = document.getElementById('monthlyTable');
+        const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        
+        for (let i = 0; i < 12; i++) {
+            // Hotel Prime
+            monthlyTable.innerHTML += `
+                <tr>
+                    <td><span class="badge badge-account">Hotel Prime</span></td>
+                    <td>${monthNames[i]}</td>
+                    <td class="text-right">R$ ${monthlyData.prime.spend[i].toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    <td class="text-right">${monthlyData.prime.impressions[i].toLocaleString('pt-BR')}</td>
+                    <td class="text-right">${monthlyData.prime.clicks[i].toLocaleString('pt-BR')}</td>
+                    <td class="text-right">R$ ${monthlyData.prime.cpc[i].toFixed(2)}</td>
+                    <td class="text-right">${monthlyData.prime.ctr[i].toFixed(2)}%</td>
+                </tr>
+            `;
+            // CA02 LVM
+            monthlyTable.innerHTML += `
+                <tr>
+                    <td><span class="badge badge-account">CA02 LVM</span></td>
+                    <td>${monthNames[i]}</td>
+                    <td class="text-right">R$ ${monthlyData.lvm.spend[i].toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    <td class="text-right">${monthlyData.lvm.impressions[i].toLocaleString('pt-BR')}</td>
+                    <td class="text-right">${monthlyData.lvm.clicks[i].toLocaleString('pt-BR')}</td>
+                    <td class="text-right">R$ ${monthlyData.lvm.cpc[i].toFixed(2)}</td>
+                    <td class="text-right">${monthlyData.lvm.ctr[i].toFixed(2)}%</td>
+                </tr>
+            `;
+        }
+        
+        // Ranking de campanhas
+        const sortedByCTR = [...campaigns].sort((a, b) => b.ctr - a.ctr);
+        
+        const topCampaigns = document.getElementById('topCampaigns');
+        sortedByCTR.slice(0, 5).forEach((camp, i) => {
+            topCampaigns.innerHTML += `
+                <div class="ranking-item top">
+                    <div class="ranking-position">${i + 1}</div>
+                    <div class="ranking-name">
+                        <strong>${camp.name}</strong>
+                        <br><span style="color: #64748b; font-size: 0.8rem;">${camp.account}</span>
+                    </div>
+                    <div class="ranking-metrics">
+                        <div><span class="positive">CTR: ${camp.ctr.toFixed(2)}%</span></div>
+                        <div>R$ ${camp.spend.toLocaleString('pt-BR')} | ${camp.clicks.toLocaleString('pt-BR')} cliques</div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        const bottomCampaigns = document.getElementById('bottomCampaigns');
+        sortedByCTR.slice(-5).reverse().forEach((camp, i) => {
+            bottomCampaigns.innerHTML += `
+                <div class="ranking-item bottom">
+                    <div class="ranking-position">${i + 1}</div>
+                    <div class="ranking-name">
+                        <strong>${camp.name}</strong>
+                        <br><span style="color: #64748b; font-size: 0.8rem;">${camp.account}</span>
+                    </div>
+                    <div class="ranking-metrics">
+                        <div><span class="negative">CTR: ${camp.ctr.toFixed(2)}%</span></div>
+                        <div>R$ ${camp.spend.toLocaleString('pt-BR')} | ${camp.clicks.toLocaleString('pt-BR')} cliques</div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        // Tabela completa de campanhas
+        const campaignsTable = document.getElementById('campaignsTable');
+        campaigns.forEach(camp => {
+            campaignsTable.innerHTML += `
+                <tr>
+                    <td>${camp.name}</td>
+                    <td><span class="badge badge-account">${camp.account}</span></td>
+                    <td class="text-right">R$ ${camp.spend.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    <td class="text-right">${camp.impressions.toLocaleString('pt-BR')}</td>
+                    <td class="text-right">${camp.clicks.toLocaleString('pt-BR')}</td>
+                    <td class="text-right">R$ ${camp.cpc.toFixed(2)}</td>
+                    <td class="text-right">${camp.ctr.toFixed(2)}%</td>
+                </tr>
+            `;
+        });
+    </script>
+</body>
+</html>
